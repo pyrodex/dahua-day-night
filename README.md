@@ -1,0 +1,1 @@
+This is the first upload of the Dahua python script to help automatically flop between Day and Night mode using OpenWeatherMap API for determine when sunset and sunrise is supposed to occur. I wrote this for the "Warm Light" cameras as they don't do this natively today.

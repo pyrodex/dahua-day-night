@@ -1,0 +1,10 @@
+cron_directory: /etc/cron.d
+scheduling_cron_file: /etc/cron.d/dahua-day-night
+scheduling_cron_time: "0 4 * * *" # Should be default cron timing
+scheduling_cron_user: root
+log_file: "> /var/log/dahua-day-night.log"
+api_key: API_KEY
+city_name: City, State
+sunset_adjustment: -300
+pushover_user_key: USER_KEY
+pushover_token_key: TOKEN_KEY

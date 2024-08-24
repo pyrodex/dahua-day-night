@@ -1,0 +1,17 @@
+camera: backyard
+ip: 192.168.xx.xx
+login: login
+password: password
+auth: digest
+sunrise_url: "http://192.168.xx.xx/cgi-bin/configManager.cgi?action=setConfig&VideoInMode[0].ConfigEx=Day&VideoInMode[0].Mode=4"
+sunset_url: "http://192.168.xx.xx/cgi-bin/configManager.cgi?action=setConfig&VideoInMode[0].ConfigEx=Night&VideoInMode[0].Mode=4"
+notify: pushover
+---
+camera: driveway
+ip: 192.168.xx.xx
+login: login
+password: password
+auth: digest
+sunrise_url: "http://192.168.xx.xx/cgi-bin/configManager.cgi?action=setConfig&VideoInMode[0].Config[0]=0&VideoInMode[0].Mode=0"
+sunset_url: "http://192.168.xx.xx/cgi-bin/configManager.cgi?action=setConfig&VideoInMode[0].Config[0]=1&VideoInMode[0].Mode=0"
+notify: pushover
