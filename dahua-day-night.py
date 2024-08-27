@@ -43,7 +43,7 @@ def epoch_to_cron(epoch_time):
 
 # Create the daily refreshing cron task to create the daily sunrise and sunset cron tasks
 def create_scheduling_cron(config, args):
-    scheduling_command = config['scheduling_cron_time'] + " " + config['scheduling_cron_user'] + " " + os.path.realpath(__file__) + " " + config['log_file']
+    scheduling_command = config['scheduling_cron_time'] + " " + config['scheduling_cron_user'] + " " + os.path.realpath(__file__) + " -s " + config['log_file']
     if args.verbose:
         print(f"{datetime.datetime.now()}: Creating the {config['scheduling_cron_file']} scheduling file with the following contents: {scheduling_command}")
     try:
