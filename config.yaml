@@ -5,6 +5,7 @@ scheduling_cron_user: root
 log_file: "> /var/log/dahua-day-night.log"
 api_key: API_KEY
 city_name: City, State
-sunset_adjustment: -300
+#Remove and now configurable at a PER Camera level
+#sunset_adjustment: -300
 pushover_user_key: USER_KEY
 pushover_token_key: TOKEN_KEY

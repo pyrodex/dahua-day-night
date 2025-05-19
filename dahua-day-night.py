@@ -10,25 +10,23 @@ import os # File writing
 import sys # System functions
 
 # Get the sunset and sunrise EPOCH from OpenWeatherMap API
-def get_times(api_key, city_name, sunset_adjustment, args):
-    # API endpoint for current weather
+def get_times(api_key, city_name, sunset_adjustment, sunrise_adjustment, args):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}"
-    # Fetch weather data
     response = requests.get(url)
     data = response.json()
-    # Adjust for sunset offset if desired
+    sunrise_epoch = data['sys']['sunrise'] + sunrise_adjustment
     sunset_epoch = data['sys']['sunset'] + sunset_adjustment
-    # Extract sunrise and sunset times (in UTC)
     if args.verbose:
-        print(f"{datetime.datetime.now()}: Sunrise EPOCH: {data['sys']['sunrise']}")
+        print(f"{datetime.datetime.now()}: Original Sunrise EPOCH: {data['sys']['sunrise']}")
+        print(f"{datetime.datetime.now()}: Adjusted Sunrise EPOCH: {sunrise_epoch}")
         print(f"{datetime.datetime.now()}: Original Sunset EPOCH: {data['sys']['sunset']}")
         print(f"{datetime.datetime.now()}: Adjusted Sunset EPOCH: {sunset_epoch}")
-    sunrise = epoch_to_cron(data['sys']['sunrise'])
+    sunrise = epoch_to_cron(sunrise_epoch)
     sunset = epoch_to_cron(sunset_epoch)
     if args.verbose:
         print(f"{datetime.datetime.now()}: Sunrise cron time: {sunrise}")
         print(f"{datetime.datetime.now()}: Sunset cron time: {sunset}")
-    return(sunrise, sunset)
+    return (sunrise, sunset)
 
 # Convert EPOCH to Linux cron time format
 def epoch_to_cron(epoch_time):
@@ -169,8 +167,6 @@ def main():
                     print(f"{datetime.datetime.now()}: Found {camera['camera']} in {cameras_file}.")  
                     switch_camera(camera,args)
     if not args.camera and not args.time:
-        # Get the current sunrise and sunset times from OpenWeatherMap
-        (sunrise,sunset) = get_times(config['api_key'], config['city_name'], config['sunset_adjustment'], args)
         # Parse cameras.yaml
         if args.verbose:
             print(f"{datetime.datetime.now()}: Parsing cameras.yaml file...")
@@ -188,8 +184,15 @@ def main():
                     print(f"{datetime.datetime.now()}:  Day URL: {camera['sunrise_url']}")
                     print(f"{datetime.datetime.now()}:  Night URL: {camera['sunset_url']}")
                     print(f"{datetime.datetime.now()}:  Notify: {camera['notify']}")
+                    print(f"{datetime.datetime.now()}:  Sunrise Offset: {camera.get('sunrise_adjustment', 0)}")
+                    print(f"{datetime.datetime.now()}:  Sunset Offset: {camera.get('sunset_adjustment', 0)}")
                 if args.verbose:
                     print(f"{datetime.datetime.now()}: Beginning to build out cron file for {camera['camera']}")
+                # Default to 0 if adjustment not set
+                sunset_adjustment = camera.get('sunset_adjustment', 0)
+                sunrise_adjustment = camera.get('sunrise_adjustment', 0)
+                # Get sunrise/sunset adjusted per camera
+                sunrise, sunset = get_times(config['api_key'], config['city_name'], sunset_adjustment, sunrise_adjustment, args)
                 create_camera_cron(sunrise, sunset, config, camera, args)
     if args.verbose:
         print(f"{datetime.datetime.now()}: Finished, goodbye...")
